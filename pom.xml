@@ -1,0 +1,59 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.github.jlaborda</groupId>
+    <artifactId>horizonBN</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>horizonBN</name>
+    <description>A Java library for Bayesian Network structure learning in high-dimensional problems.</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
+
+    <modules>
+        <module>core-ges</module>
+        <module>core-mcts</module>
+        <module>pges</module>
+        <module>cges</module>
+        <module>mctsbn</module>
+        <module>pmctsbn</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <!--ConsensusBN-->
+            <dependency>
+                <groupId>io.github.jlaborda</groupId>
+                <artifactId>consensusBN</artifactId>
+                <version>v1.0.1</version>
+            </dependency>
+            <!-- Tetrad -->
+            <dependency>
+                <groupId>io.github.cmu-phil</groupId>
+                <artifactId>tetrad-lib</artifactId>
+                <version>7.6.4</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.cmu-phil</groupId>
+                <artifactId>data-reader</artifactId>
+                <version>7.1.2-2</version>
+            </dependency>
+            <!-- JUnit -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>5.9.0</version>
+                <scope>test</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+</project>
