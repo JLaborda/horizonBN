@@ -9,24 +9,25 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>cges</artifactId>
+    <artifactId>test-utils</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>io.github.jlaborda</groupId>
-            <artifactId>core-ges</artifactId>
-            <version>${project.version}</version> </dependency>
+       <dependency>
+            <groupId>io.github.cmu-phil</groupId>
+            <artifactId>tetrad-lib</artifactId>
+        </dependency>
 
         <dependency>
-            <groupId>io.github.jlaborda</groupId>
-            <artifactId>consensusBN</artifactId>
-            </dependency>
+            <groupId>io.github.cmu-phil</groupId>
+            <artifactId>data-reader</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
         </dependency>
+        
     </dependencies>
 
 </project>

@@ -20,7 +20,6 @@
         <dependency>
             <groupId>io.github.jlaborda</groupId>
             <artifactId>consensusBN</artifactId>
-            <version>v1.0.1</version>
             </dependency>
 
         <dependency>
