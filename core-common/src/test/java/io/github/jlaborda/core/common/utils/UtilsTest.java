@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import edu.cmu.tetrad.bayes.BayesPm;
@@ -36,16 +37,21 @@ import weka.classifiers.bayes.net.BIFReader;
 public class UtilsTest {
 
 
-    //final String path1 = "src/test/resources/repeatedNames.csv";
-    final String path = Resources.CANCER_DATASET_PATH;
+    /**
+     * Path to the data file
+     */
+    static String path;
+
     /**
      * Dataset created from the data file1
      */
-    //final DataSet datasetRepeated = Utils.readData(path1);
     final DataSet dataset = Resources.CANCER_DATASET;
 
 
-
+        @BeforeAll
+    public static void setUp() throws IOException{
+        path = Resources.getPathFromResource(Resources.CANCER_DATASET_PATH);
+    }
 
 
     /**
