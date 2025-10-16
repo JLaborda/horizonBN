@@ -27,6 +27,13 @@
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
         </dependency>
+        <!--Test Resources module-->
+        <dependency>
+            <groupId>io.github.jlaborda</groupId>
+            <artifactId>test-utils</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>io.github.jlaborda</groupId>
