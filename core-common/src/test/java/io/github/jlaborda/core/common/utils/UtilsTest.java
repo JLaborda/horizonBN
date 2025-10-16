@@ -226,7 +226,7 @@ public class UtilsTest {
     @Test
     public void getIndexOfNodesByNameTest() throws Exception {
         BIFReader bf = new BIFReader();
-        bf.processFile(Resources.CANCER_NET_PATH);
+        bf.processFile(path);
 
         System.out.println("Numero de variables: "+bf.getNrOfNodes());
         MlBayesIm bn2 = new MlBayesIm(Utils.transformBayesNetToBayesPm(bf));

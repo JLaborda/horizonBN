@@ -157,8 +157,8 @@ public class Problem {
     }
 
 
-    public Problem(String file) throws IOException{
-        this(Utils.readData(file));
+    public Problem(String resourceFile) throws IOException{
+        this(Utils.readDataFromResource(resourceFile));
     }
 
 
@@ -187,8 +187,7 @@ public class Problem {
         if (obj == null){
             return false;
         }
-        if (obj instanceof Problem){
-            Problem p = (Problem) obj;
+        if (obj instanceof Problem p){
             return data.equals(p.getData());
         }
         return false;

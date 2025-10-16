@@ -5,9 +5,12 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -268,17 +271,7 @@ public class Utils {
         return setOfArcs;
     }
 
-
-    /**
-     * Stores the data from a csv as a DataSet object.
-     * @param path
-     * Path to the csv file.
-     * @return DataSet containing the data from the csv file.
-     * @throws IOException If path is incorrect, an error occurs while reading the file.
-     */
-    public static DataSet readData(String pathString) throws IOException{
-        // Reading data with new data-reader library
-        Path path = Paths.get(pathString);
+    public static DataSet readData(Path path) throws IOException {
         VerticalDiscreteTabularDatasetFileReader datasetReader = new VerticalDiscreteTabularDatasetFileReader(path, Delimiter.COMMA);
         datasetReader.setHasHeader(true);
         DiscreteData data = (DiscreteData) datasetReader.readInData();
@@ -314,23 +307,54 @@ public class Utils {
         //System.out.println("Number of columns in dataBox: " + dataBox.numCols());
 
         return new BoxDataSet(dataBox, variables);
-
-        
-        // Reading data with old data-reader library
-        // // Initial Configuration
-        // DataReader reader = new DataReader();
-        // reader.setDelimiter(DelimiterType.COMMA);
-        // reader.setMaxIntegralDiscrete(100);
-        // DataSet dataSet = null;
-        // // Reading data
-        // try {
-        //     dataSet = reader.parseTabular(new File(path));
-        // } catch (IOException e) {
-        //     e.printStackTrace();
-        // }
-
-        // return dataSet;
     }
+
+
+    /**
+     * Stores the data from a csv as a DataSet object.
+     * @param path
+     * Path to the csv file.
+     * @return DataSet containing the data from the csv file.
+     * @throws IOException If path is incorrect, an error occurs while reading the file.
+     */
+    public static DataSet readData(String pathString) throws IOException{
+        Path path = Paths.get(pathString);
+        return Utils.readData(path);
+    }
+
+/**
+ * Lee un DataSet directamente desde un recurso del classpath.
+ * Este método se encarga de todo el proceso: extrae el recurso a un
+ * fichero temporal, lo lee y garantiza su eliminación.
+ *
+ * @param resourcePath La ruta absoluta al recurso en el classpath (ej: "/datasets/cancer.csv").
+ * @return El DataSet cargado.
+ * @throws IOException Si el recurso no se encuentra o hay un error de lectura.
+ */
+public static DataSet readDataFromResource(String resourcePath) throws IOException {
+    Path tempFile = null;
+    // Usamos try-with-resources para asegurar que el InputStream se cierre siempre
+    try (InputStream inputStream = Utils.class.getResourceAsStream(resourcePath)) {
+        if (inputStream == null) {
+            throw new IOException("Recurso no encontrado en el classpath: " + resourcePath);
+        }
+        
+        // 1. Crear el fichero temporal
+        tempFile = Files.createTempFile("horizonBN-", ".tmp");
+
+        // 2. Copiar el contenido al fichero
+        Files.copy(inputStream, tempFile, StandardCopyOption.REPLACE_EXISTING);
+
+        // 3. Llamar a tu método readData existente, que ya sabe trabajar con Path
+        return readData(tempFile);
+
+    } finally {
+        // 4. Asegurarse de que el fichero se borra, pase lo que pase
+        if (tempFile != null) {
+            Files.deleteIfExists(tempFile);
+        }
+    }
+}
 
 
     public static Node getNodeByName(List<Node> nodes, String name){

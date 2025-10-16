@@ -22,7 +22,7 @@ import edu.pitt.dbmi.data.reader.tabular.VerticalDiscreteTabularDatasetFileReade
 
 public class Resources {
     // EARTHQUAKE
-    public static final String EARTHQUAKE_DATASET_PATH = "/datasets/earthquake.xbif_.csv";//"./src/test/res/BBDD/earthquake.xbif_.csv";
+    public static final String EARTHQUAKE_DATASET_PATH = "/datasets/earthquake.xbif_.csv";
     public static final String EARTHQUAKE_NET_PATH = "/networks/earthquake.xbif";
     public static final String EARTHQUAKE_TEST_PATH = "/datasets/tests/earthquake_test.csv";
     public static final DataSet EARTHQUAKE_DATASET = loadDatasetOrThrow(EARTHQUAKE_DATASET_PATH);
