@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import edu.cmu.tetrad.bayes.BayesPm;
@@ -40,18 +39,12 @@ public class UtilsTest {
     /**
      * Path to the data file
      */
-    static String path;
+    final static String path = Resources.CANCER_DATASET_PATH;
 
     /**
      * Dataset created from the data file1
      */
     final DataSet dataset = Resources.CANCER_DATASET;
-
-
-        @BeforeAll
-    public static void setUp() throws IOException{
-        path = Resources.getPathFromResource(Resources.CANCER_DATASET_PATH);
-    }
 
 
     /**
@@ -104,7 +97,8 @@ public class UtilsTest {
         // Arranging: Loading the cancer network
         String net_path1 = Resources.CANCER_NET_PATH;
         BIFReader bf = new BIFReader();
-        bf.processFile(net_path1);
+        String realPath = this.getClass().getResource(net_path1).getPath();
+        bf.processFile(realPath);
         //Transforming the BayesNet into a BayesPm
         BayesPm bayesPm = Utils.transformBayesNetToBayesPm(bf);
         MlBayesIm bn1 = new MlBayesIm(bayesPm);
@@ -144,17 +138,19 @@ public class UtilsTest {
     public void avgMarkovBlanquetDifTest() throws Exception {
         /*TEST: Different Dags should return null*/
         String net_path1 = Resources.CANCER_NET_PATH;
+        String realPath1 = this.getClass().getResource(net_path1).getPath();
         String net_path2 = Resources.EARTHQUAKE_NET_PATH;
+        String realPath2 = this.getClass().getResource(net_path2).getPath();
         BIFReader bf = new BIFReader();
 
         // Arranging dags of alarm and cancer
-        bf.processFile(net_path1);
+        bf.processFile(realPath1);
 
         //Transforming the BayesNet into a BayesPm
         BayesPm bayesPm = Utils.transformBayesNetToBayesPm(bf);
         MlBayesIm bn1 = new MlBayesIm(bayesPm);
 
-        bf.processFile(net_path2);
+        bf.processFile(realPath2);
         //Transforming the BayesNet into a BayesPm
         BayesPm bayesPm2 = Utils.transformBayesNetToBayesPm(bf);
         MlBayesIm bn2 = new MlBayesIm(bayesPm2);
@@ -209,7 +205,8 @@ public class UtilsTest {
     @Test
     public void getNodeByNameTest() throws Exception {
         BIFReader bf = new BIFReader();
-        bf.processFile(Resources.CANCER_NET_PATH);
+        String realPath = this.getClass().getResource(Resources.CANCER_NET_PATH).getPath();
+        bf.processFile(realPath);
 
         System.out.println("Numero de variables: "+bf.getNrOfNodes());
         MlBayesIm bn2 = new MlBayesIm(Utils.transformBayesNetToBayesPm(bf));

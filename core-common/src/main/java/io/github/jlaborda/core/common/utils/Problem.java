@@ -157,8 +157,8 @@ public class Problem {
     }
 
 
-    public Problem(String resourceFile) throws IOException{
-        this(Utils.readDataFromResource(resourceFile));
+    public Problem(String resourcePath) throws IOException{
+        this(Utils.readDataFromResource(resourcePath));
     }
 
 

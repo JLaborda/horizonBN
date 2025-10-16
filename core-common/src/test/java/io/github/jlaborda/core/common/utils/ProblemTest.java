@@ -13,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.github.benmanes.caffeine.cache.Cache;
@@ -29,18 +28,13 @@ public class ProblemTest {
     /**
      * Path to the data file
      */
-    static String path;
+    static String path = Resources.CANCER_DATASET_PATH;
 
     /**
      * Dataset created from the data file
      */
     final DataSet dataset = Resources.CANCER_DATASET;
 
-
-    @BeforeAll
-    public static void setUp() throws IOException{
-        path = Resources.getPathFromResource(Resources.CANCER_DATASET_PATH);
-    }
 
     @Test
     public void constructorTest() throws IOException{

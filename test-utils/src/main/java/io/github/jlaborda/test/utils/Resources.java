@@ -155,30 +155,4 @@ public class Resources {
             }
         }
     }
-
-    public static String getPathFromResource(String resourcePath) throws IOException {
-        Path tempFile = null;
-        // Try and Finally to ensure InputStream is closed
-        try (InputStream inputStream = Resources.class.getResourceAsStream(resourcePath)) {
-            if (inputStream == null) {
-                throw new IOException("Resource not found: " + resourcePath);
-            }
-
-            // 1. Create a temporary file with a prefix and suffix
-            tempFile = Files.createTempFile("horizonBN-dataset-", ".csv");
-
-            // 2. Copy the content of the resource to the temporary file
-            Files.copy(inputStream, tempFile, StandardCopyOption.REPLACE_EXISTING);
-
-            // 3. Return the path of the temporary file
-            return tempFile.toString();
-
-        } finally {
-            // 4. (CRUCIAL) Ensure the temporary file is deleted
-            if (tempFile != null) {
-                Files.deleteIfExists(tempFile);
-            }
-        }
-    }
-
 }
