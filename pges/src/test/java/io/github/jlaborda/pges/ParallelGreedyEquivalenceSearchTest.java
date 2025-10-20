@@ -18,10 +18,10 @@ import edu.cmu.tetrad.graph.Dag;
 import edu.cmu.tetrad.graph.Edge;
 import edu.cmu.tetrad.graph.Node;
 import io.github.jlaborda.core.common.utils.Utils;
+import io.github.jlaborda.core.ges.clustering.EdgeClustering;
+import io.github.jlaborda.core.ges.clustering.RandomClustering;
 import io.github.jlaborda.core.ges.framework.BackwardStage;
 import io.github.jlaborda.core.ges.framework.ForwardStage;
-import io.github.jlaborda.pges.clustering.EdgeClustering;
-import io.github.jlaborda.pges.clustering.RandomClustering;
 import io.github.jlaborda.test.utils.Resources;
 
 

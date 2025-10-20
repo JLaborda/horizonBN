@@ -1,4 +1,4 @@
-package io.github.jlaborda.pges.clustering;
+package io.github.jlaborda.core.ges.clustering;
 
 import java.util.HashSet;
 import java.util.List;

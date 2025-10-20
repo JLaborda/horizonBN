@@ -6,14 +6,14 @@ import edu.cmu.tetrad.data.DataSet;
 import edu.cmu.tetrad.graph.Graph;
 import io.github.jlaborda.core.common.utils.Problem;
 import io.github.jlaborda.core.common.utils.Utils;
+import io.github.jlaborda.core.ges.clustering.EdgeClustering;
+import io.github.jlaborda.core.ges.clustering.HierarchicalClustering;
 import io.github.jlaborda.core.ges.framework.BESFusion;
 import io.github.jlaborda.core.ges.framework.BESStage;
 import io.github.jlaborda.core.ges.framework.BNBuilder;
 import io.github.jlaborda.core.ges.framework.FESFusion;
 import io.github.jlaborda.core.ges.framework.FESStage;
 import io.github.jlaborda.core.ges.threads.GESThread;
-import io.github.jlaborda.pges.clustering.EdgeClustering;
-import io.github.jlaborda.pges.clustering.HierarchicalClustering;
 
 public class ParallelGreedyEquivalenceSearch extends BNBuilder {
 
