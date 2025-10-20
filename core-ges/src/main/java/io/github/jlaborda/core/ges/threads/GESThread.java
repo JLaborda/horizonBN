@@ -161,17 +161,24 @@ public abstract class GESThread implements Runnable{
      */
     public static double insertEval(Node x, Node y, Set<Node> t, Graph graph, Problem problem) {
         // set1 contains x; set2 does not.
-        Set<Node> set1;
-//        if(t.isEmpty()){
-//            set1 = new HashSet<>();
-//        }
-//        else{
-            set1 = new HashSet<>(findNaYX(x, y, graph));
-//        }
-        set1.addAll(t);
-        set1.addAll(graph.getParents(y));
+        // 1. Find the NaYX nodes of x and y. If null, create an empty set.
+        List<Node> naYX = findNaYX(x, y, graph);
+        Set<Node> set1 = (naYX != null) ? new HashSet<>(naYX) : new HashSet<>();
+
+        // 2. Check that t is not empty, and add it to set1.
+        if(t != null && !t.isEmpty()){
+            set1.addAll(t);
+        }
+
+        // 3. Add parents of y to set1 and avoid thread exceptions.
+        List<Node> parentsY = graph.getParents(y);
+        if(parentsY != null){
+            set1.addAll(parentsY);
+        }
+        // 4. Copy set1 to set2, and add x only to set1
         Set<Node> set2 = new HashSet<>(set1);
         set1.add(x);
+        // 5. Check the score difference between both sets.
         return scoreGraphChange(y, set1, set2, graph, problem);
     }
 
@@ -232,12 +239,32 @@ public abstract class GESThread implements Runnable{
      * @return Score difference of the deletion.
      */
     protected double deleteEval(Node x, Node y, Set<Node> h, Graph graph) {
-        Set<Node> set1 = new HashSet<>(findNaYX(x, y, graph));
-        set1.removeAll(h);
-        set1.addAll(graph.getParents(y));
+        // set1 contains x; set2 does not.
+        // 1. Find the NaYX nodes of x and y. If null, create an empty set.
+        List<Node> naYX = findNaYX(x, y, graph);
+        Set<Node> set1 = (naYX != null) ? new HashSet<>(naYX) : new HashSet<>();
+
+        // 2. Check that h is not empty, and add it to set1.
+        if(h != null && !h.isEmpty()){
+            set1.removeAll(h);
+        }
+        // 3. Add parents of y to set1 and avoid thread exceptions.
+        List<Node> parentsY = graph.getParents(y);
+        if(parentsY != null){
+            set1.addAll(parentsY);
+        }
+        // 4. Remove x from set1 and add it to set2
         Set<Node> set2 = new HashSet<>(set1);
         set1.remove(x);
         set2.add(x);
+
+        // Original code:
+        // Set<Node> set1 = new HashSet<>(findNaYX(x, y, graph));
+        // set1.removeAll(h);
+        // set1.addAll(graph.getParents(y));
+        // Set<Node> set2 = new HashSet<>(set1);
+        // set1.remove(x);
+        // set2.add(x);
         return scoreGraphChange(y, set1, set2, graph, problem);
     }
 
@@ -541,7 +568,7 @@ public abstract class GESThread implements Runnable{
      * @param currentGraph The Graph we want to set.
      */
     public void setInitialGraph(Graph currentGraph){
-        this.initialDag = currentGraph;
+        this.initialDag = new EdgeListGraph(currentGraph);
     }
 
     /**

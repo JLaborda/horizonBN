@@ -114,7 +114,7 @@ public abstract class BNBuilder {
     }
 
     public BNBuilder(String path, int nThreads, int maxIterations, int nItInterleaving) throws IOException {
-        this(Utils.readData(path), nThreads, maxIterations, nItInterleaving);
+        this(Utils.readDataFromResource(path), nThreads, maxIterations, nItInterleaving);
     }
 
     public BNBuilder(Graph initialGraph, DataSet data, int nThreads, int maxIterations, int nItInterleaving) {
@@ -125,7 +125,7 @@ public abstract class BNBuilder {
 
 
     public BNBuilder(Graph initialGraph, String path, int nThreads, int maxIterations, int nItInterleaving) throws IOException {
-        this(initialGraph, Utils.readData(path), nThreads, maxIterations, nItInterleaving);
+        this(initialGraph, Utils.readDataFromResource(path), nThreads, maxIterations, nItInterleaving);
     }
 
     public BNBuilder(Graph initialGraph, Problem problem, int nThreads, int maxIterations, int nItInterleaving) {
