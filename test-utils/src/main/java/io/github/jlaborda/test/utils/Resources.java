@@ -8,6 +8,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import edu.cmu.tetrad.data.BoxDataSet;
 import edu.cmu.tetrad.data.DataSet;
@@ -155,4 +156,34 @@ public class Resources {
             }
         }
     }
+
+    /**
+     * Ejecuta una acción con un fichero temporal creado a partir de un recurso del classpath.
+     * Es la forma segura de usar librerías que necesitan un Path a un fichero.
+     *
+     * @param resourcePath La ruta al recurso (ej: "/networks/cancer.xbif").
+     * @param action La acción a ejecutar (una función lambda que recibe el Path del fichero).
+     * @throws Exception Si el recurso no se encuentra o la acción falla.
+ */
+public static void withResourceAsFile(String resourcePath, Consumer<Path> action) throws Exception {
+    Path tempFile = null;
+    try (InputStream inputStream = Resources.class.getResourceAsStream(resourcePath)) {
+        if (inputStream == null) {
+            throw new IOException("Recurso no encontrado en el classpath: " + resourcePath);
+        }
+        // Usamos el sufijo del fichero original para que algunas librerías no se quejen
+        String suffix = resourcePath.substring(resourcePath.lastIndexOf("."));
+        tempFile = Files.createTempFile("horizonBN-resource-", suffix);
+        Files.copy(inputStream, tempFile, StandardCopyOption.REPLACE_EXISTING);
+
+        // Ejecutamos tu código pasándole el Path del fichero temporal
+        action.accept(tempFile);
+
+    } finally {
+        // Se asegura de que el fichero se borre al final, pase lo que pase.
+        if (tempFile != null) {
+            Files.deleteIfExists(tempFile);
+        }
+    }
+}
 }

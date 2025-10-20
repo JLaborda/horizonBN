@@ -30,6 +30,10 @@ jobs:
       # The 'mvn verify' command runs the build lifecycle up to the verify phase,
       # which includes compiling the code and running tests.
       # JaCoCo will automatically hook into this process to generate the coverage report.
+      # Step 3.1: Install Maven (if not already available)
+      - name: Install Maven
+        run: sudo apt-get update && sudo apt-get install -y maven
+
       - name: Build with Maven and generate coverage report
         run: mvn -B verify
 

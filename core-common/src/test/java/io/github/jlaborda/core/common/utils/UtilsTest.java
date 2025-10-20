@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 
 import edu.cmu.tetrad.bayes.BayesPm;
@@ -82,7 +83,7 @@ public class UtilsTest {
     public void readDataTest() throws IOException{
 
         //Act
-        DataSet result = Utils.readData(path);
+        DataSet result = Utils.readDataFromResource(path);
 
         //Assert
         assertNotNull(result);
@@ -94,42 +95,84 @@ public class UtilsTest {
 
     @Test
     public void markovBlanquetTest() throws Exception {
-        // Arranging: Loading the cancer network
-        String net_path1 = Resources.CANCER_NET_PATH;
-        BIFReader bf = new BIFReader();
-        String realPath = this.getClass().getResource(net_path1).getPath();
-        bf.processFile(realPath);
-        //Transforming the BayesNet into a BayesPm
-        BayesPm bayesPm = Utils.transformBayesNetToBayesPm(bf);
-        MlBayesIm bn1 = new MlBayesIm(bayesPm);
-        Dag dag = new Dag(bn1.getDag());
+        Resources.withResourceAsFile(Resources.CANCER_NET_PATH, (realPath)->{
+            try{
+                BIFReader bf = new BIFReader();
+                bf.processFile(realPath.toString());
 
-        // Setting expected outcome
-        Map<Node, List<Node>> expected = new HashMap<>();
-        expected.put(dag.getNode("Pollution"), Arrays.asList(dag.getNode("Cancer"), dag.getNode("Smoker")));
-        expected.put(dag.getNode("Smoker"), Arrays.asList(dag.getNode("Cancer"), dag.getNode("Pollution")));
-        expected.put(dag.getNode("Cancer"), Arrays.asList(dag.getNode("Pollution"), dag.getNode("Smoker"),
-                dag.getNode("Xray"), dag.getNode("Dyspnoea")));
-        expected.put(dag.getNode("Xray"), Collections.singletonList(dag.getNode("Cancer")));
-        expected.put(dag.getNode("Dyspnoea"), Collections.singletonList(dag.getNode("Cancer")));
+                //Transforming the BayesNet into a BayesPm
+                BayesPm bayesPm = Utils.transformBayesNetToBayesPm(bf);
+                MlBayesIm bn1 = new MlBayesIm(bayesPm);
+                Dag dag = new Dag(bn1.getDag());
+
+                       // Setting expected outcome
+                Map<Node, List<Node>> expected = new HashMap<>();
+                expected.put(dag.getNode("Pollution"), Arrays.asList(dag.getNode("Cancer"), dag.getNode("Smoker")));
+                expected.put(dag.getNode("Smoker"), Arrays.asList(dag.getNode("Cancer"), dag.getNode("Pollution")));
+                expected.put(dag.getNode("Cancer"), Arrays.asList(dag.getNode("Pollution"), dag.getNode("Smoker"),
+                        dag.getNode("Xray"), dag.getNode("Dyspnoea")));
+                expected.put(dag.getNode("Xray"), Collections.singletonList(dag.getNode("Cancer")));
+                expected.put(dag.getNode("Dyspnoea"), Collections.singletonList(dag.getNode("Cancer")));
 
 
-        // Acting: Getting MB for every node
-        for (Node n: dag.getNodes() ) {
-            List<Node> result = Utils.getMarkovBlanket(dag,n);
-            List<Node> exp = expected.get(n);
+                // Acting: Getting MB for every node
+                for (Node n: dag.getNodes() ) {
+                    List<Node> result = Utils.getMarkovBlanket(dag,n);
+                    List<Node> exp = expected.get(n);
 
-            //Asserting result
-            assertEquals(result.size(), exp.size());
-            assertFalse(result.contains(n));
+                    //Asserting result
+                    assertEquals(result.size(), exp.size());
+                    assertFalse(result.contains(n));
 
-            for(Node e : exp){
-                assertTrue(result.contains(e));
+                    for(Node e : exp){
+                        assertTrue(result.contains(e));
+                    }
+                    for(Node r : result){
+                        assertTrue(exp.contains(r));
+                    }
+                }
+
+
+            }catch(Exception e){
+               fail("Exception thrown while processing file: " + e.getMessage());
             }
-            for(Node r : result){
-                assertTrue(exp.contains(r));
-            }
-        }
+        });
+        // // Arranging: Loading the cancer network
+        // String net_path1 = Resources.CANCER_NET_PATH;
+        // BIFReader bf = new BIFReader();
+        // String realPath = this.getClass().getResource(net_path1).getPath();
+        // bf.processFile(realPath);
+        // //Transforming the BayesNet into a BayesPm
+        // BayesPm bayesPm = Utils.transformBayesNetToBayesPm(bf);
+        // MlBayesIm bn1 = new MlBayesIm(bayesPm);
+        // Dag dag = new Dag(bn1.getDag());
+
+        // // Setting expected outcome
+        // Map<Node, List<Node>> expected = new HashMap<>();
+        // expected.put(dag.getNode("Pollution"), Arrays.asList(dag.getNode("Cancer"), dag.getNode("Smoker")));
+        // expected.put(dag.getNode("Smoker"), Arrays.asList(dag.getNode("Cancer"), dag.getNode("Pollution")));
+        // expected.put(dag.getNode("Cancer"), Arrays.asList(dag.getNode("Pollution"), dag.getNode("Smoker"),
+        //         dag.getNode("Xray"), dag.getNode("Dyspnoea")));
+        // expected.put(dag.getNode("Xray"), Collections.singletonList(dag.getNode("Cancer")));
+        // expected.put(dag.getNode("Dyspnoea"), Collections.singletonList(dag.getNode("Cancer")));
+
+
+        // // Acting: Getting MB for every node
+        // for (Node n: dag.getNodes() ) {
+        //     List<Node> result = Utils.getMarkovBlanket(dag,n);
+        //     List<Node> exp = expected.get(n);
+
+        //     //Asserting result
+        //     assertEquals(result.size(), exp.size());
+        //     assertFalse(result.contains(n));
+
+        //     for(Node e : exp){
+        //         assertTrue(result.contains(e));
+        //     }
+        //     for(Node r : result){
+        //         assertTrue(exp.contains(r));
+        //     }
+        // }
 
 
     }
@@ -222,8 +265,11 @@ public class UtilsTest {
 
     @Test
     public void getIndexOfNodesByNameTest() throws Exception {
+        String net_path1 = Resources.CANCER_NET_PATH;
+        String realPath1 = this.getClass().getResource(net_path1).getPath();
+        
         BIFReader bf = new BIFReader();
-        bf.processFile(path);
+        bf.processFile(realPath1);
 
         System.out.println("Numero de variables: "+bf.getNrOfNodes());
         MlBayesIm bn2 = new MlBayesIm(Utils.transformBayesNetToBayesPm(bf));
